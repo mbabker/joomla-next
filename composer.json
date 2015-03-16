@@ -1,0 +1,28 @@
+{
+    "name": "mbabker/joomla-next",
+    "description": "Joomla! Next",
+    "license": "GPL-2.0+",
+    "type": "project",
+    "config": {
+        "vendor-dir": "libraries/vendor"
+    },
+    "require": {
+        "php": ">=5.4",
+        "joomla/application": "~2.0@dev",
+        "joomla/controller": "~2.0@dev",
+        "joomla/di": "~2.0@dev",
+        "joomla/filter": "~1.1",
+        "joomla/input": "~1.2",
+        "joomla/language": "~2.0@dev",
+        "joomla/model": "~2.0@dev",
+        "joomla/registry": "~2.0@dev",
+        "joomla/string": "~1.0",
+        "joomla/uri": "~2.0@dev",
+        "joomla/view": "~2.0@dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "Joomla\\": "libraries/core"
+        }
+    }
+}
