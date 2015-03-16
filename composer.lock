@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "91cb6c0576166e54e62e06a408829df1",
+    "hash": "b1d0c2a81287375887334099edf2340e",
     "packages": [
         {
             "name": "joomla/application",
@@ -406,6 +406,53 @@
             "time": "2015-03-04 02:21:06"
         },
         {
+            "name": "joomla/profiler",
+            "version": "dev-2.0-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/joomla-framework/profiler.git",
+                "reference": "f89b761e05c94eabe9428438f2c635a2019971ce"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/joomla-framework/profiler/zipball/f89b761e05c94eabe9428438f2c635a2019971ce",
+                "reference": "f89b761e05c94eabe9428438f2c635a2019971ce",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.10"
+            },
+            "require-dev": {
+                "joomla/test": "~1.0",
+                "phpunit/phpunit": "4.*",
+                "squizlabs/php_codesniffer": "1.*"
+            },
+            "type": "joomla-package",
+            "extra": {
+                "branch-alias": {
+                    "dev-2.0-dev": "2.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Joomla\\Profiler\\": "src/",
+                    "Joomla\\Profiler\\Tests\\": "Tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "description": "Joomla Profiler Package",
+            "homepage": "https://github.com/joomla-framework/profiler",
+            "keywords": [
+                "framework",
+                "joomla",
+                "profiler"
+            ],
+            "time": "2015-03-03 17:01:48"
+        },
+        {
             "name": "joomla/registry",
             "version": "dev-2.0-dev",
             "source": {
@@ -700,6 +747,7 @@
         "joomla/di": 20,
         "joomla/language": 20,
         "joomla/model": 20,
+        "joomla/profiler": 20,
         "joomla/registry": 20,
         "joomla/uri": 20,
         "joomla/view": 20
