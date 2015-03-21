@@ -93,7 +93,7 @@ try
 	// Mark afterLoad to our profiler if debugging
 	if (JDEBUG)
 	{
-		(new Joomla\Profiler\ProfilerFactory)->mark('application', 'afterLoad');
+		Joomla\Profiler\ProfilerFactory::getProfiler('application')->mark('afterLoad');
 	}
 
 	$container = (new Joomla\DI\Container)
@@ -116,7 +116,7 @@ try
 {
 	if (JDEBUG)
 	{
-		(new Joomla\Profiler\ProfilerFactory)->mark('application', 'beforeApplicationLaunch');
+		Joomla\Profiler\ProfilerFactory::getProfiler('application')->mark('beforeApplicationLaunch');
 	}
 
 	$application = new Joomla\Application\SiteApplication(new Joomla\Input\Input, $config);
@@ -125,7 +125,7 @@ try
 
 	if (JDEBUG)
 	{
-		echo '<br />' . (new Joomla\Profiler\ProfilerFactory)->getProfiler('application')->render();
+		echo '<br />' . Joomla\Profiler\ProfilerFactory::getProfiler('application')->render();
 	}
 }
 catch (\Exception $e)

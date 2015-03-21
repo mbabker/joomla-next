@@ -26,18 +26,24 @@ class ProfilerFactory
 	/**
 	 * Get a Profiler instance.
 	 *
-	 * @param   string  $profiler  Name of the profiler to retrieve.
+	 * @param   string   $profiler  Name of the profiler to retrieve.
+	 * @param   boolean  $create    Flag to create a new Profiler instance if the requested one does not exist.
 	 *
 	 * @return  Profiler
 	 *
 	 * @since   1.0
-	 * @throws  \RuntimeException
+	 * @throws  \RuntimeException if the requested profile does not exist and instructed to not create a new instance.
 	 */
-	public function getProfiler($profiler)
+	public static function getProfiler($profiler, $create = true)
 	{
 		if (!isset(self::$profilers[$profiler]))
 		{
-			throw new \RuntimeException('The requested profiler does not exist.');
+			if (!$create)
+			{
+				throw new \RuntimeException('The requested profiler does not exist.');
+			}
+
+			self::$profilers[$profiler] = new Profiler($profiler);
 		}
 
 		return self::$profilers[$profiler];
@@ -57,18 +63,7 @@ class ProfilerFactory
 	 */
 	public function mark($profiler, $name, $create = true)
 	{
-		// Validate the profiler exists and try to create it if we're allowed, otherwise fail
-		if (!isset(self::$profilers[$profiler]))
-		{
-			if (!$create)
-			{
-				throw new \RuntimeException('The requested profiler does not exist.');
-			}
-
-			self::$profilers[$profiler] = new Profiler($profiler);
-		}
-
-		self::$profilers[$profiler]->mark($name);
+		static::getProfiler($profiler, $create)->mark($name);
 
 		return $this;
 	}
