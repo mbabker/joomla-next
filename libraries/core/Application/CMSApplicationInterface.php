@@ -57,7 +57,16 @@ interface CMSApplicationInterface
 	 *
 	 * @since   1.0
 	 */
-	public function initialiseApp($options = array());
+	public function initialiseApp($options = []);
+
+	/**
+	 * Flag if the application instance is a CLI or web based application.
+	 *
+	 * @return  boolean
+	 *
+	 * @since   1.0
+	 */
+	public function isCli();
 
 	/**
 	 * Loads a User object to the application as the active identity.

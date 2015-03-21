@@ -12,6 +12,7 @@
         "joomla/compat": "~1.0",
         "joomla/controller": "~2.0@dev",
         "joomla/di": "~2.0@dev",
+        "joomla/filesystem": "~2.0@dev",
         "joomla/filter": "~1.1",
         "joomla/input": "~1.2",
         "joomla/language": "~2.0@dev",

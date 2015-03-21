@@ -90,21 +90,21 @@ class LanguageHelper extends BaseLanguageHelper implements ContainerAwareInterfa
 			// Installation uses a list of available languages in the application
 			if ($app->getName() === 'installation')
 			{
-				$languages[$key] = array();
-				$knownLangs = $this->getKnownLanguages(JPATH_INSTALLATION);
+				$languages[$key] = [];
+				$knownLangs      = $this->getKnownLanguages(JPATH_INSTALLATION);
 
 				foreach ($knownLangs as $metadata)
 				{
 					// Take off 3 letters iso code languages as they can't match browsers' languages and default them to en
-					$obj = new \stdClass;
-					$obj->lang_code = $metadata['tag'];
+					$obj               = new \stdClass;
+					$obj->lang_code    = $metadata['tag'];
 					$languages[$key][] = $obj;
 				}
 			}
 			else
 			{
 				/** @var \Joomla\Database\DatabaseDriver $db */
-				$db = $this->getContainer()->get('db');
+				$db    = $this->getContainer()->get('db');
 				$query = $db->getQuery(true)
 					->select('*')
 					->from('#__languages')
@@ -112,15 +112,15 @@ class LanguageHelper extends BaseLanguageHelper implements ContainerAwareInterfa
 					->order('ordering ASC');
 				$db->setQuery($query);
 
-				$languages['default'] = $db->loadObjectList();
-				$languages['sef'] = array();
-				$languages['lang_code'] = array();
+				$languages['default']   = $db->loadObjectList();
+				$languages['sef']       = [];
+				$languages['lang_code'] = [];
 
 				if (isset($languages['default'][0]))
 				{
 					foreach ($languages['default'] as $lang)
 					{
-						$languages['sef'][$lang->sef] = $lang;
+						$languages['sef'][$lang->sef]             = $lang;
 						$languages['lang_code'][$lang->lang_code] = $lang;
 					}
 				}

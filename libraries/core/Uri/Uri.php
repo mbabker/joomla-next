@@ -23,7 +23,7 @@ class Uri extends BaseUri
 	 * @var    Uri[]
 	 * @since  1.0
 	 */
-	private static $instances = array();
+	private static $instances = [];
 
 	/**
 	 * The current calculated base URL segments.
@@ -31,7 +31,7 @@ class Uri extends BaseUri
 	 * @var    array
 	 * @since  1.0
 	 */
-	private static $base = array();
+	private static $base = [];
 
 	/**
 	 * The current calculated root URL segments.
@@ -39,7 +39,7 @@ class Uri extends BaseUri
 	 * @var    array
 	 * @since  1.0
 	 */
-	private static $root = array();
+	private static $root = [];
 
 	/**
 	 * The current URL.
@@ -159,12 +159,9 @@ class Uri extends BaseUri
 				self::$base['host'] = $uri->toString(array('scheme', 'host', 'port'));
 				self::$base['path'] = rtrim($uri->toString(array('path')), '/\\');
 
-				if (defined('JPATH_BASE') && defined('JPATH_ADMINISTRATOR'))
+				if (JPATH_BASE === JPATH_ADMINISTRATOR)
 				{
-					if (JPATH_BASE == JPATH_ADMINISTRATOR)
-					{
-						self::$base['path'] .= '/administrator';
-					}
+					self::$base['path'] .= '/administrator';
 				}
 			}
 			else
@@ -249,9 +246,9 @@ class Uri extends BaseUri
 	 */
 	public function reset()
 	{
-		self::$instances = array();
-		self::$base = array();
-		self::$root = array();
+		self::$instances = [];
+		self::$base = [];
+		self::$root = [];
 		self::$current = '';
 	}
 
@@ -270,7 +267,7 @@ class Uri extends BaseUri
 		$base = $uri->toString(array('scheme', 'host', 'port', 'path'));
 		$host = $uri->toString(array('scheme', 'host', 'port'));
 
-		if (stripos($base, self::base()) !== 0 && !empty($host))
+		if (stripos($base, static::base()) !== 0 && !empty($host))
 		{
 			return false;
 		}

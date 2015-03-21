@@ -9,8 +9,12 @@
 namespace Installation;
 
 use Joomla\Application\AbstractWebApplication;
+use Joomla\CMS\Application\CMSApplicationInterface;
+use Joomla\CMS\Application\CMSApplicationTrait;
+use Joomla\CMS\Document\DocumentFactory;
 use Joomla\CMS\Language\LanguageHelper;
 use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\User;
 use Joomla\DI\ContainerAwareInterface;
 use Joomla\DI\ContainerAwareTrait;
 use Joomla\Language\Language;
@@ -22,24 +26,15 @@ use Joomla\Session\Session;
  *
  * @since  1.0
  */
-final class Application extends AbstractWebApplication implements ContainerAwareInterface
+final class Application extends AbstractWebApplication implements CMSApplicationInterface, ContainerAwareInterface
 {
+	use CMSApplicationTrait;
 	use ContainerAwareTrait;
 
 	/**
-	 * Language instance
+	 * {@inheritdoc}
 	 *
-	 * @var    Language
 	 * @since  1.0
-	 */
-	private $language;
-
-	/**
-	 * Method to run the application routines.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	protected function doExecute()
 	{
@@ -54,14 +49,50 @@ final class Application extends AbstractWebApplication implements ContainerAware
 
 		try
 		{
+			// Retrieve a document object
+			$lang = $this->language;
+			$type = $this->input->getWord('format', 'html');
+
+			$attributes = array(
+				'characterSet' => 'utf-8',
+				'language' => $lang->getTag(),
+				'direction' => $lang->isRTL() ? 'rtl' : 'ltr',
+				'application' => $this
+			);
+
+			$this->setDocument((new DocumentFactory)->getDocument($type, $attributes));
+
+			// Set up the params
+			$document = $this->getDocument();
+
+			if ($document->getType() == 'html')
+			{
+				// Set metadata
+				$document->setTitle($this->language->getText()->translate('INSTL_PAGE_TITLE'));
+			}
+
 			$controller = $this->fetchController($this->input->getCmd('task', 'display'));
-			$contents   = $controller->execute();
+			$controller->execute();
 
 			// If debug language is set, append its output to the contents.
 			if ($this->get('language.debug'))
 			{
-				$contents .= $this->debugLanguage();
+				$buffer   = $document->getBuffer();
+				$contents = $buffer['component'] . $this->debugLanguage();
+				$document->setBuffer($contents, ['type' => 'component']);
 			}
+
+			$file = $this->input->getCmd('tmpl', 'index');
+
+			$options = [
+				'template'  => $this->getTemplate(),
+				'file'      => $file . '.php',
+				'directory' => JPATH_THEMES,
+				'params'    => '{}'
+			];
+
+			// Render the response
+			$this->setBody($document->render(false, $options));
 		}
 		catch (\Exception $e)
 		{
@@ -93,15 +124,24 @@ final class Application extends AbstractWebApplication implements ContainerAware
 			$class .= '\\' . ucfirst(strtolower($piece));
 		}
 
+		$class .= 'Controller';
+
 		// If the requested controller exists let's use it.
 		if (class_exists($class))
 		{
-			return $this->getContainer()->buildObject($class);
+			$controller = $this->getContainer()->buildObject($class);
+
+			if ($controller instanceof ContainerAwareInterface)
+			{
+				$controller->setContainer($this->getContainer());
+			}
+
+			return $controller;
 		}
 
 		// Nothing found. Panic.
 		throw new \RuntimeException(
-			$this->language->getText()->sprintf('INSTL_CONTROLLER_NOT_FOUND', $task)
+			$this->getLanguage()->getText()->sprintf('INSTL_CONTROLLER_NOT_FOUND', $task)
 		);
 	}
 
@@ -146,11 +186,9 @@ final class Application extends AbstractWebApplication implements ContainerAware
 	}
 
 	/**
-	 * Gets the name of the current running application.
+	 * {@inheritdoc}
 	 *
-	 * @return  string
-	 *
-	 * @since   1.0
+	 * @since  1.0
 	 */
 	public function getName()
 	{
@@ -158,13 +196,32 @@ final class Application extends AbstractWebApplication implements ContainerAware
 	}
 
 	/**
-	 * Custom initialisation method.
+	 * Gets the name of the current template.
 	 *
-	 * Called at the end of the AbstractApplication::__construct method.
+	 * @param   boolean  $params  True to return the template parameters.
 	 *
-	 * @return  void
+	 * @return  \stdClass|string  The name of the template or an object containing the template name and parameters.
 	 *
 	 * @since   1.0
+	 */
+	public function getTemplate($params = false)
+	{
+		if ($params)
+		{
+			$template = new \stdClass;
+			$template->template = 'joomla';
+			$template->params = new Registry;
+
+			return $template;
+		}
+
+		return 'joomla';
+	}
+
+	/**
+	 * {@inheritdoc}
+	 *
+	 * @since  1.0
 	 */
 	protected function initialise()
 	{
@@ -185,13 +242,9 @@ final class Application extends AbstractWebApplication implements ContainerAware
 	}
 
 	/**
-	 * Initialise the application.
+	 * {@inheritdoc}
 	 *
-	 * @param   array  $options  An optional associative array of configuration settings.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
+	 * @since  1.0
 	 */
 	public function initialiseApp($options = array())
 	{
@@ -279,18 +332,35 @@ final class Application extends AbstractWebApplication implements ContainerAware
 		$this->set('helpurl', $options['helpurl']);
 
 		// Instantiate our Langauge instance
-		$this->language = Language::getInstance($this->get('language.code'), JPATH_INSTALLATION, $this->get('language.debug'));
-		$this->getContainer()->share('Joomla\\Language\\Language', $this->language);
+		$this->setLanguage(Language::getInstance($this->get('language.code'), JPATH_INSTALLATION, $this->get('language.debug')));
+		$this->getContainer()->share('Joomla\\Language\\Language', $this->getLanguage());
 	}
 
 	/**
-	 * Load the application session.
+	 * {@inheritdoc}
 	 *
-	 * @param   Session  $session  An optional Session object.
+	 * @since  1.0
+	 */
+	public function isCli()
+	{
+		return false;
+	}
+
+	/**
+	 * {@inheritdoc}
 	 *
-	 * @return  $this
+	 * @since  1.0
+	 */
+	public function loadIdentity(User $user = null)
+	{
+		// The install application doesn't have the concept of an identity, so for now just return a null
+		return;
+	}
+
+	/**
+	 * {@inheritdoc}
 	 *
-	 * @since   1.0
+	 * @since  1.0
 	 */
 	public function loadSession(Session $session = null)
 	{
