@@ -9,6 +9,7 @@
 namespace Joomla\CMS\Application;
 
 use Joomla\CMS\User;
+use Joomla\Session\Session;
 
 /**
  * Interface defining a Joomla! CMS Application class
@@ -68,4 +69,15 @@ interface CMSApplicationInterface
 	 * @since   1.0
 	 */
 	public function loadIdentity(User $user = null);
+
+	/**
+	 * Load the application session.
+	 *
+	 * @param   Session  $session  An optional Session object.
+	 *
+	 * @return  $this
+	 *
+	 * @since   1.0
+	 */
+	public function loadSession(Session $session = null);
 }

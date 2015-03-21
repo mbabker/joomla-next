@@ -10,6 +10,10 @@
  * @license    http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License Version 2 or Later
  */
 
+// Hard coded for now
+error_reporting(-1);
+ini_set('display_errors', 1);
+
 /**
  * Define the application's minimum supported PHP version as a constant so it can be referenced within the application.
  */
@@ -77,10 +81,15 @@ define('JDEBUG', false);
  */
 try
 {
-	(new Installation\Application)->execute();
+	$container = new Joomla\DI\Container;
+
+	$application = new Installation\Application;
+	$application->setContainer($container);
+	$application->execute();
 }
 catch (\Exception $e)
 {
+	var_dump($e);die;
 	header('HTTP/1.1 500 Internal Server Error', null, 500);
 	header('Content-Type: text/html; charset=utf-8');
 	echo 'An error occurred while executing the application: ' . $e->getMessage();

@@ -51,7 +51,7 @@ require JPATH_LIBRARIES . '/vendor/autoload.php';
 // Define the application version if not already defined.
 if (!defined('JVERSION'))
 {
-	$jversion = new \Joomla\Version;
+	$jversion = new \Joomla\CMS\Version;
 	define('JVERSION', $jversion->getShortVersion());
 	unset($jversion);
 }

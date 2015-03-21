@@ -20,6 +20,7 @@ Desktop.ini
 /logs
 /tmp
 /configuration.php
+/configuration_backup.php
 /.htaccess
 /web.config
 

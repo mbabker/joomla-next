@@ -19,6 +19,7 @@
         "joomla/profiler": "~2.0@dev",
         "joomla/registry": "~2.0@dev",
         "joomla/renderer": "~2.0@dev",
+        "joomla/session": "~1.0",
         "joomla/string": "~1.0",
         "joomla/uri": "~2.0@dev",
         "joomla/view": "~2.0@dev"
