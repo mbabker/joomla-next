@@ -9,21 +9,17 @@
 namespace Joomla\CMS\Document;
 
 use Joomla\CMS\Application\CMSApplicationInterface;
+use Joomla\DI\ContainerAwareInterface;
+use Joomla\DI\ContainerAwareTrait;
 
 /**
  * Base implementation of the DocumentInterface
  *
  * @since  1.0
  */
-abstract class AbstractDocument implements DocumentInterface
+abstract class AbstractDocument implements DocumentInterface, ContainerAwareInterface
 {
-	/**
-	 * Application object
-	 *
-	 * @var    CMSApplicationInterface
-	 * @since  1.0
-	 */
-	protected $application;
+	use ContainerAwareTrait;
 
 	/**
 	 * Container for the document output buffer
@@ -80,23 +76,6 @@ abstract class AbstractDocument implements DocumentInterface
 	 * @since  1.0
 	 */
 	private $type = null;
-
-	/**
-	 * Retrieves the application reference
-	 *
-	 * @return  CMSApplicationInterface
-	 *
-	 * @since   1.0
-	 */
-	public function getApplication()
-	{
-		if ($this->application)
-		{
-			return $this->application;
-		}
-
-		throw new \RuntimeException('The application object is not set to the document class.');
-	}
 
 	/**
 	 * {@inheritdoc}
@@ -186,34 +165,21 @@ abstract class AbstractDocument implements DocumentInterface
 	public function render($cache = false, $params = array())
 	{
 		// Make sure we have a web application
-		if ($this->getApplication()->isCli())
+		/** @var CMSApplicationInterface $app */
+		$app = $this->getContainer()->get('app');
+
+		if ($app->isCli())
 		{
 			return;
 		}
 
 		if ($mdate = $this->getModifiedDate())
 		{
-			$this->getApplication()->modifiedDate = $mdate;
+			$app->modifiedDate = $mdate;
 		}
 
-		$this->getApplication()->mimeType = $this->getMimeEncoding();
-		$this->getApplication()->charSet  = $this->getCharacterSet();
-	}
-
-	/**
-	 * Sets the document's application reference
-	 *
-	 * @param   CMSApplicationInterface  $application  Application reference
-	 *
-	 * @return  $this
-	 *
-	 * @since   1.0
-	 */
-	public function setApplication(CMSApplicationInterface $application)
-	{
-		$this->application = $application;
-
-		return $this;
+		$app->mimeType = $this->getMimeEncoding();
+		$app->charSet  = $this->getCharacterSet();
 	}
 
 	/**

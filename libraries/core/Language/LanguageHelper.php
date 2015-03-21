@@ -22,6 +22,61 @@ class LanguageHelper extends BaseLanguageHelper implements ContainerAwareInterfa
 	use ContainerAwareTrait;
 
 	/**
+	 * Builds a list of the system languages which can be used in a select option
+	 *
+	 * @param   string   $actualLanguage  Client key for the area
+	 * @param   string   $basePath        Base path to use
+	 * @param   boolean  $caching         True if caching is used
+	 * @param   boolean  $installed       Get only installed languages
+	 *
+	 * @return  array  List of system languages
+	 *
+	 * @since   1.0
+	 */
+	public function createLanguageList($actualLanguage, $basePath = JPATH_BASE, $caching = false, $installed = false)
+	{
+		$list = array();
+
+		// Cache activation
+		$langs = $this->getKnownLanguages($basePath);
+
+		if ($installed)
+		{
+			/** @var \Joomla\Database\DatabaseDriver $db */
+			$db    = $this->getContainer()->get('db');
+			$query = $db->getQuery(true)
+				->select('element')
+				->from('#__extensions')
+				->where('type=' . $db->quote('language'))
+				->where('state=0')
+				->where('enabled=1')
+				->where('client_id=' . ($basePath == JPATH_ADMINISTRATOR ? 1 : 0));
+			$db->setQuery($query);
+			$installed_languages = $db->loadObjectList('element');
+		}
+
+		foreach ($langs as $lang => $metadata)
+		{
+			if (!$installed || array_key_exists($lang, $installed_languages))
+			{
+				$option = array();
+
+				$option['text'] = $metadata['name'];
+				$option['value'] = $lang;
+
+				if ($lang == $actualLanguage)
+				{
+					$option['selected'] = 'selected="selected"';
+				}
+
+				$list[] = $option;
+			}
+		}
+
+		return $list;
+	}
+
+	/**
 	 * Tries to detect the language.
 	 *
 	 * @return  string  locale or null if not found

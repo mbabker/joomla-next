@@ -104,7 +104,8 @@ class HtmlDocument extends AbstractDocument
 		}
 
 		// Load the language file for the template
-		$lang = $this->getApplication()->getLanguage();
+		/** @var \Joomla\Language\Language $lang */
+		$lang = $this->getContainer()->get('language');
 
 		// 1.5 or core then 1.6
 		$lang->load('tpl_' . $template, JPATH_BASE, null, false, true)

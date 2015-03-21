@@ -81,15 +81,10 @@ define('JDEBUG', false);
  */
 try
 {
-	$container = new Joomla\DI\Container;
-
-	$application = new Installation\Application;
-	$application->setContainer($container);
-	$application->execute();
+	(new Installation\Application(new Joomla\DI\Container))->execute();
 }
 catch (\Exception $e)
 {
-	var_dump($e);die;
 	header('HTTP/1.1 500 Internal Server Error', null, 500);
 	header('Content-Type: text/html; charset=utf-8');
 	echo 'An error occurred while executing the application: ' . $e->getMessage();

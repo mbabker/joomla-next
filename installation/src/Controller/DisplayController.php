@@ -63,12 +63,50 @@ class DisplayController extends AbstractController implements ContainerAwareInte
 			$this->getInput()->set('view', $this->defaultView);
 		}
 
-		if ($vName != $this->defaultView && ($checkOptions && empty($options)))
+		switch ($vName)
 		{
-			$this->setRedirect('index.php');
+			case 'preinstall':
+				$model = new SetupModel;
+				$model->setText($app->getLanguage()->getText());
+
+				$sufficient   = $model->getPhpOptionsSufficient();
+				$checkOptions = false;
+				$options      = $model->getOptions();
+
+				if ($sufficient)
+				{
+					$app->redirect('index.php');
+				}
+
+				break;
+
+			case 'languages':
+			case 'defaultlanguage':
+				$model = new InstallationModelLanguages;
+				$checkOptions = false;
+				$options = array();
+				break;
+
+			default:
+				$model = new SetupModel;
+				$model->setText($app->getLanguage()->getText());
+
+				$sufficient   = $model->getPhpOptionsSufficient();
+				$checkOptions = true;
+				$options      = $model->getOptions();
+
+				if (!$sufficient)
+				{
+					$app->redirect('index.php?view=preinstall');
+				}
+
+				break;
 		}
 
-		$model = new SetupModel;
+		if ($vName != $this->defaultView && ($checkOptions && empty($options)))
+		{
+			$app->redirect('index.php');
+		}
 
 		// Initialize our view
 		$view = $this->initialiseView($model);
@@ -103,16 +141,16 @@ class DisplayController extends AbstractController implements ContainerAwareInte
 
 		$class = 'Installation\\View\\' . $view . '\\' . $view . $format . 'View';
 
-		// Ensure the class exists, fall back to the API base view otherwise
+		// Ensure the class exists, fall back to the default view otherwise
 		if (!class_exists($class))
 		{
-			$class = 'Joomla\\View\\Base' . $format . 'View';
+			$class = 'Installation\\View\\Default' . $format . 'View';
 
 			// If we still have nothing, abort mission
 			if (!class_exists($class))
 			{
 				throw new \RuntimeException(
-					$this->getText()->sprintf('INSTL_VIEW_NOT_FOUND', $view, $format)
+					$this->getApplication()->getLanguage()->getText()->sprintf('INSTL_VIEW_NOT_FOUND', $view, $format)
 				);
 			}
 		}

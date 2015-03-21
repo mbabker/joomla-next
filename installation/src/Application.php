@@ -15,6 +15,7 @@ use Joomla\CMS\Document\DocumentFactory;
 use Joomla\CMS\Language\LanguageHelper;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\User;
+use Joomla\DI\Container;
 use Joomla\DI\ContainerAwareInterface;
 use Joomla\DI\ContainerAwareTrait;
 use Joomla\Language\Language;
@@ -30,6 +31,38 @@ final class Application extends AbstractWebApplication implements CMSApplication
 {
 	use CMSApplicationTrait;
 	use ContainerAwareTrait;
+
+	/**
+	 * Class constructor.
+	 *
+	 * @param   Container  $container  DI Container
+	 *
+	 * @since   1.0
+	 */
+	public function __construct(Container $container)
+	{
+		$this->setContainer($container);
+
+		parent::__construct();
+
+		$this->loadSession();
+
+		// Store the debug value to config based on the JDEBUG flag.
+		$this->set('debug', JDEBUG);
+
+		// Create the base URI object for the application
+		$uri = Uri::getInstance();
+
+		// Set the base URI
+		$baseUri = (array) $this->get('uri.base');
+		$uri->setBase($baseUri);
+
+		// Now set the root URI
+		$parts = explode('/', $baseUri['full']);
+		array_pop($parts);
+		$baseUri['full'] = implode('/', $parts);
+		$uri->setRoot($baseUri);
+	}
 
 	/**
 	 * {@inheritdoc}
@@ -50,25 +83,27 @@ final class Application extends AbstractWebApplication implements CMSApplication
 		try
 		{
 			// Retrieve a document object
-			$lang = $this->language;
+			$lang = $this->getLanguage();
 			$type = $this->input->getWord('format', 'html');
 
 			$attributes = array(
 				'characterSet' => 'utf-8',
 				'language' => $lang->getTag(),
-				'direction' => $lang->isRTL() ? 'rtl' : 'ltr',
-				'application' => $this
+				'direction' => $lang->isRTL() ? 'rtl' : 'ltr'
 			);
 
-			$this->setDocument((new DocumentFactory)->getDocument($type, $attributes));
+			$this->setDocument((new DocumentFactory)->getDocument($type, $attributes)->setContainer($this->getContainer()));
 
 			// Set up the params
 			$document = $this->getDocument();
+			$this->getContainer()->share('Joomla\\CMS\\Document\\AbstractDocument', $document)
+				->alias('Joomla\\CMS\\Document\\DocumentInterface', 'Joomla\\CMS\\Document\\AbstractDocument')
+				->alias('document', 'Joomla\\CMS\\Document\\AbstractDocument');
 
 			if ($document->getType() == 'html')
 			{
 				// Set metadata
-				$document->setTitle($this->language->getText()->translate('INSTL_PAGE_TITLE'));
+				$document->setTitle($lang->getText()->translate('INSTL_PAGE_TITLE'));
 			}
 
 			$controller = $this->fetchController($this->input->getCmd('task', 'display'));
@@ -96,6 +131,7 @@ final class Application extends AbstractWebApplication implements CMSApplication
 		}
 		catch (\Exception $e)
 		{
+			var_dump($e);die;
 			echo $e->getMessage();
 			$this->close($e->getCode());
 		}
@@ -223,44 +259,8 @@ final class Application extends AbstractWebApplication implements CMSApplication
 	 *
 	 * @since  1.0
 	 */
-	protected function initialise()
-	{
-		// Enable sessions by default.
-		$this->config->def('session', true);
-
-		// Set the session default name.
-		$this->config->def('session_name', 'installation');
-
-		// Create the session if a session name is passed.
-		if ($this->get('session') !== false)
-		{
-			$this->loadSession();
-		}
-
-		// Store the debug value to config based on the JDEBUG flag.
-		$this->set('debug', JDEBUG);
-	}
-
-	/**
-	 * {@inheritdoc}
-	 *
-	 * @since  1.0
-	 */
 	public function initialiseApp($options = array())
 	{
-		// Create the base URI object for the application
-		$uri = Uri::getInstance();
-
-		// Set the base URI
-		$baseUri = (array) $this->get('uri.base');
-		$uri->setBase($baseUri);
-
-		// Now set the root URI
-		$parts = explode('/', $baseUri['full']);
-		array_pop($parts);
-		$baseUri['full'] = implode('/', $parts);
-		$uri->setRoot($baseUri);
-
 		// Check for localisation information provided in a localise.xml file.
 		$forced = $this->getLocalise();
 
@@ -333,7 +333,8 @@ final class Application extends AbstractWebApplication implements CMSApplication
 
 		// Instantiate our Langauge instance
 		$this->setLanguage(Language::getInstance($this->get('language.code'), JPATH_INSTALLATION, $this->get('language.debug')));
-		$this->getContainer()->share('Joomla\\Language\\Language', $this->getLanguage());
+		$this->getContainer()->share('Joomla\\Language\\Language', $this->getLanguage())
+			->alias('language', 'Joomla\\Language\\Language');
 	}
 
 	/**
@@ -364,24 +365,14 @@ final class Application extends AbstractWebApplication implements CMSApplication
 	 */
 	public function loadSession(Session $session = null)
 	{
-		// Generate a session name.
-		$name = md5($this->get('secret') . $this->get('session_name', get_class($this)));
-
-		// Calculate the session lifetime.
-		$lifetime = (($this->get('lifetime')) ? $this->get('lifetime') * 60 : 900);
-
-		// Get the session handler from the configuration.
-		$handler = $this->get('session_handler', 'none');
-
 		// Initialize the options for Session.
 		$options = array(
-			'name'      => $name,
-			'expire'    => $lifetime,
-			'force_ssl' => $this->get('force_ssl')
+			'name'      => md5($this->get('uri.base.host') . $this->getName()),
+			'expire'    => 900
 		);
 
 		// Instantiate the session object.
-		$session = Session::getInstance($handler, $options);
+		$session = Session::getInstance('none', $options);
 		$session->initialise($this->input);
 
 		if ($session->getState() == 'expired')
@@ -401,6 +392,8 @@ final class Application extends AbstractWebApplication implements CMSApplication
 
 		// Set the session object.
 		$this->setSession($session);
+		$this->getContainer()->share('Joomla\\Session\\Session', $session)
+			->alias('session', 'Joomla\\Session\\Session');
 
 		return $this;
 	}
