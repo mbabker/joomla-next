@@ -6,9 +6,9 @@
  * @license    http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License Version 2 or Later
  */
 
-namespace Joomla\Application;
+namespace Joomla\CMS\Application;
 
-use Joomla\Profiler\ProfilerFactory;
+use Joomla\CMS\Profiler\ProfilerFactory;
 
 /**
  * CMS site application class.
@@ -30,7 +30,7 @@ final class SiteApplication extends AbstractCMSWebApplication
 
 		if (JDEBUG)
 		{
-			(new ProfilerFactory)->mark('application', 'afterExecute');
+			ProfilerFactory::getProfiler('application')->mark('afterExecute');
 		}
 	}
 }

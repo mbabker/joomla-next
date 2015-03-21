@@ -6,7 +6,7 @@
  * @license    http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License Version 2 or Later
  */
 
-namespace Joomla\Service;
+namespace Joomla\CMS\Service;
 
 use Joomla\Registry\Registry;
 

@@ -48,7 +48,7 @@ require_once JPATH_LIBRARIES . '/framework.php';
  */
 try
 {
-	$config = (new Joomla\Service\ConfigurationParser)->getConfig();
+	$config = (new Joomla\CMS\Service\ConfigurationParser)->getConfig();
 
 	// Set error reporting based on config
 	switch ($config->get('error_reporting', 'default'))
@@ -93,11 +93,11 @@ try
 	// Mark afterLoad to our profiler if debugging
 	if (JDEBUG)
 	{
-		Joomla\Profiler\ProfilerFactory::getProfiler('application')->mark('afterLoad');
+		Joomla\CMS\Profiler\ProfilerFactory::getProfiler('application')->mark('afterLoad');
 	}
 
 	$container = (new Joomla\DI\Container)
-		->registerServiceProvider(new Joomla\Service\DatabaseProvider($config));
+		->registerServiceProvider(new Joomla\CMS\Service\DatabaseProvider($config));
 }
 catch (\Exception $e)
 {
@@ -116,16 +116,16 @@ try
 {
 	if (JDEBUG)
 	{
-		Joomla\Profiler\ProfilerFactory::getProfiler('application')->mark('beforeApplicationLaunch');
+		Joomla\CMS\Profiler\ProfilerFactory::getProfiler('application')->mark('beforeApplicationLaunch');
 	}
 
-	$application = new Joomla\Application\SiteApplication(new Joomla\Input\Input, $config);
+	$application = new Joomla\CMS\Application\SiteApplication(new Joomla\Input\Input, $config);
 	$application->setContainer($container);
 	$application->execute();
 
 	if (JDEBUG)
 	{
-		echo '<br />' . Joomla\Profiler\ProfilerFactory::getProfiler('application')->render();
+		echo '<br />' . Joomla\CMS\Profiler\ProfilerFactory::getProfiler('application')->render();
 	}
 }
 catch (\Exception $e)
