@@ -306,7 +306,7 @@ class LayoutRenderer extends AbstractRenderer
 	 *
 	 * @return  void
 	 *
-	 * @since   3.2
+	 * @since   1.0
 	 */
 	public function removeFolder($path)
 	{

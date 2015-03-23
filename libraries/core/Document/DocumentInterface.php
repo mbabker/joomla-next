@@ -8,12 +8,14 @@
 
 namespace Joomla\CMS\Document;
 
+use Joomla\DI\ContainerAwareInterface;
+
 /**
  * Interface representing a Document object
  *
  * @since  1.0
  */
-interface DocumentInterface
+interface DocumentInterface extends ContainerAwareInterface
 {
 	/**
 	 * Get the contents of the document buffer.

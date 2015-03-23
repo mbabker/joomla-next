@@ -8,6 +8,7 @@
 
 namespace Joomla\CMS\Application;
 
+use Joomla\CMS\Document\DocumentFactory;
 use Joomla\CMS\Document\DocumentInterface;
 use Joomla\Language\Language;
 
@@ -41,6 +42,26 @@ trait CMSApplicationTrait
 	 * @since  1.0
 	 */
 	protected $messageQueue = [];
+
+	/**
+	 * Flag if the application services have already been loaded
+	 *
+	 * @var    boolean
+	 * @since  1.0
+	 */
+	private $servicesLoaded = false;
+
+	/**
+	 * Prepares the DocumentFactory for the application
+	 *
+	 * @return  void
+	 *
+	 * @since   1.0
+	 */
+	protected function buildDocumentFactory()
+	{
+		DocumentFactory::setContainer($this->getContainer());
+	}
 
 	/**
 	 * Enqueue a system message.
@@ -124,6 +145,30 @@ trait CMSApplicationTrait
 		}
 
 		return $this->messageQueue;
+	}
+
+	/**
+	 * Registers the services for a CMS application
+	 *
+	 * This method should be called in the application constructor or initialise method to ensure services are established
+	 * at the earliest point practical in bootup.
+	 *
+	 * @return  void
+	 *
+	 * @note    Each service loader is called separately to enable an application to override the service if needed
+	 * @since   1.0
+	 */
+	protected function registerServices()
+	{
+		// Only load once
+		if ($this->servicesLoaded)
+		{
+			throw new \RuntimeException('Services are already loaded for the application.');
+		}
+
+		$this->buildDocumentFactory();
+
+		$this->servicesLoaded = true;
 	}
 
 	/**

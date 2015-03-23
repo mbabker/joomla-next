@@ -29,8 +29,7 @@ use Joomla\Session\Session;
  */
 final class Application extends AbstractWebApplication implements CMSApplicationInterface, ContainerAwareInterface
 {
-	use CMSApplicationTrait;
-	use ContainerAwareTrait;
+	use CMSApplicationTrait, ContainerAwareTrait;
 
 	/**
 	 * Class constructor.
@@ -45,6 +44,7 @@ final class Application extends AbstractWebApplication implements CMSApplication
 
 		parent::__construct();
 
+		$this->registerServices();
 		$this->loadSession();
 
 		// Store the debug value to config based on the JDEBUG flag.
@@ -92,7 +92,7 @@ final class Application extends AbstractWebApplication implements CMSApplication
 				'direction' => $lang->isRTL() ? 'rtl' : 'ltr'
 			);
 
-			$this->setDocument((new DocumentFactory)->getDocument($type, $attributes)->setContainer($this->getContainer()));
+			$this->setDocument((new DocumentFactory)->getDocument($type, $attributes));
 
 			// Set up the params
 			$document = $this->getDocument();

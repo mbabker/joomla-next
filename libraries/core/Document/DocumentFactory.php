@@ -8,6 +8,8 @@
 
 namespace Joomla\CMS\Document;
 
+use Joomla\DI\Container;
+
 /**
  * Factory for handling document classes
  *
@@ -16,12 +18,38 @@ namespace Joomla\CMS\Document;
 class DocumentFactory
 {
 	/**
+	 * Application DI Container
+	 *
+	 * @var    Container
+	 * @since  1.0
+	 */
+	private static $container;
+
+	/**
+	 * Retrieve the DI Container
+	 *
+	 * @return  Container
+	 *
+	 * @since   1.0
+	 * @throws  \RuntimeException
+	 */
+	private function getContainer()
+	{
+		if (self::$container)
+		{
+			return self::$container;
+		}
+
+		throw new \RuntimeException('DI Container not registered in ' . __CLASS__);
+	}
+
+	/**
 	 * Loads a document object.
 	 *
 	 * @param   string  $type     The type of document to load
 	 * @param   array   $options  Options for instantiating the renderer
 	 *
-	 * @return  $this
+	 * @return  DocumentInterface
 	 *
 	 * @since   1.0
 	 */
@@ -64,7 +92,11 @@ class DocumentFactory
 			);
 		}
 
+		/** @var DocumentInterface $document */
 		$document = new $class;
+
+		// Register the DI Container to our Document
+		$document->setContainer($this->getContainer());
 
 		// Inject any attributes we've been passed
 		foreach ($options as $attribute => $value)
@@ -137,5 +169,19 @@ class DocumentFactory
 		}
 
 		return new $class($doc);
+	}
+
+	/**
+	 * Registers the application DI Container to the Factory
+	 *
+	 * @param   Container  $container  DI Container
+	 *
+	 * @return  void
+	 *
+	 * @since   1.0
+	 */
+	public static function setContainer(Container $container)
+	{
+		self::$container = $container;
 	}
 }

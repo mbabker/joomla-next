@@ -9,7 +9,6 @@
 namespace Joomla\CMS\Document;
 
 use Joomla\CMS\Application\CMSApplicationInterface;
-use Joomla\DI\ContainerAwareInterface;
 use Joomla\DI\ContainerAwareTrait;
 
 /**
@@ -17,7 +16,7 @@ use Joomla\DI\ContainerAwareTrait;
  *
  * @since  1.0
  */
-abstract class AbstractDocument implements DocumentInterface, ContainerAwareInterface
+abstract class AbstractDocument implements DocumentInterface
 {
 	use ContainerAwareTrait;
 

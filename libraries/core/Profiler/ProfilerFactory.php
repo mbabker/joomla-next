@@ -15,7 +15,7 @@ use Joomla\Profiler\Profiler;
  *
  * @since  1.0
  */
-class ProfilerFactory
+final class ProfilerFactory
 {
 	/**
 	 * Container for Profiler instances.
@@ -65,7 +65,7 @@ class ProfilerFactory
 	 */
 	public function mark($profiler, $name, $create = true)
 	{
-		static::getProfiler($profiler, $create)->mark($name);
+		self::getProfiler($profiler, $create)->mark($name);
 
 		return $this;
 	}
@@ -83,6 +83,22 @@ class ProfilerFactory
 	public function registerProfiler($name, Profiler $profiler)
 	{
 		self::$profilers[$name] = $profiler;
+
+		return $this;
+	}
+
+	/**
+	 * Unregister a Profiler instance.
+	 *
+	 * @param   string  $name  Name of the profiler to unregister.
+	 *
+	 * @return  $this
+	 *
+	 * @since   1.0
+	 */
+	public function unregisterProfiler($name)
+	{
+		unset(self::$profilers[$name]);
 
 		return $this;
 	}
