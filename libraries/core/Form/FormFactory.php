@@ -93,7 +93,7 @@ class FormFactory
 
 		if ($this->getContainer()->exists('Joomla\\Language\\Text'))
 		{
-			$text = $this->getContainer()->get('Joomla\\Language\\Language');
+			$text = $this->getContainer()->get('Joomla\\Language\\Text');
 		}
 		elseif ($this->getContainer()->exists('Joomla\\Language\\Language'))
 		{
@@ -135,7 +135,7 @@ class FormFactory
 
 		if ($this->getContainer()->exists('Joomla\\Language\\Text'))
 		{
-			$text = $this->getContainer()->get('Joomla\\Language\\Language');
+			$text = $this->getContainer()->get('Joomla\\Language\\Text');
 		}
 		elseif ($this->getContainer()->exists('Joomla\\Language\\Language'))
 		{
