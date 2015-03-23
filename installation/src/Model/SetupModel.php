@@ -8,8 +8,9 @@
 
 namespace Installation\Model;
 
+use Joomla\CMS\Form\FormFactory;
 use Joomla\Database\DatabaseDriver;
-use Joomla\Form\Form;
+use Joomla\CMS\Form\Form;
 use Joomla\Form\FormHelper;
 use Joomla\Language\Text;
 use Joomla\Model\AbstractModel;
@@ -44,8 +45,7 @@ class SetupModel extends AbstractModel
 		// Get the form.
 		FormHelper::addFormPath(JPATH_BASE . '/forms');
 
-		$form = Form::getInstance('jform', $view, ['control' => 'jform'])
-			->setText($this->getText());
+		$form = (new FormFactory())->loadForm('jform', $view, ['control' => 'jform']);
 
 		// Check the session for previously entered form data.
 		$data = (array) $this->getOptions();

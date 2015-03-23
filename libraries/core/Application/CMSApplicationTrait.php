@@ -10,6 +10,7 @@ namespace Joomla\CMS\Application;
 
 use Joomla\CMS\Document\DocumentFactory;
 use Joomla\CMS\Document\DocumentInterface;
+use Joomla\CMS\Form\FormFactory;
 use Joomla\Language\Language;
 
 /**
@@ -61,6 +62,18 @@ trait CMSApplicationTrait
 	protected function buildDocumentFactory()
 	{
 		DocumentFactory::setContainer($this->getContainer());
+	}
+
+	/**
+	 * Prepares the FormFactory for the application
+	 *
+	 * @return  void
+	 *
+	 * @since   1.0
+	 */
+	protected function buildFormFactory()
+	{
+		FormFactory::setContainer($this->getContainer());
 	}
 
 	/**
@@ -167,6 +180,7 @@ trait CMSApplicationTrait
 		}
 
 		$this->buildDocumentFactory();
+		$this->buildFormFactory();
 
 		$this->servicesLoaded = true;
 	}

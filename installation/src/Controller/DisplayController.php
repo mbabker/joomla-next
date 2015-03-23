@@ -113,6 +113,8 @@ class DisplayController extends AbstractController implements ContainerAwareInte
 
 		// Render our view and return it to the application.
 		$this->getApplication()->getDocument()->setBuffer($view->render(), ['type' => 'component']);
+
+		return true;
 	}
 
 	/**

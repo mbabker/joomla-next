@@ -8,9 +8,12 @@
 
 namespace Installation\Form\Field;
 
+use Installation\Application;
 use Installation\Model\SetupModel;
 use Joomla\CMS\Language\LanguageHelper;
 use Joomla\Form\Field\ListField;
+use Joomla\Form\Form;
+use Joomla\Language\Language;
 
 /**
  * Language Form Field class.
@@ -20,12 +23,45 @@ use Joomla\Form\Field\ListField;
 class LanguageField extends ListField
 {
 	/**
+	 * Application object.
+	 *
+	 * @var    Application
+	 * @since  1.0
+	 */
+	private $application;
+
+	/**
+	 * Language object.
+	 *
+	 * @var    Language
+	 * @since  1.0
+	 */
+	private $language;
+
+	/**
 	 * The form field type.
 	 *
 	 * @var		string
 	 * @since   1.0
 	 */
 	protected $type = 'Language';
+
+	/**
+	 * Constructor.
+	 *
+	 * @param   Form         $form         The form to attach to the form field object.
+	 * @param   Application  $application  Application object.
+	 * @param   Language     $language     Language object.
+	 *
+	 * @since   1.0
+	 */
+	public function __construct(Form $form, Application $application, Language $language)
+	{
+		parent::__construct($form);
+
+		$this->application = $application;
+		$this->language    = $language;
+	}
 
 	/**
 	 * Method to get the field options.
@@ -36,7 +72,7 @@ class LanguageField extends ListField
 	 */
 	protected function getOptions()
 	{
-//		$app = JFactory::getApplication();
+		$app = $this->application;
 
 		// Detect the native language.
 		$languageHelper = new LanguageHelper;
@@ -48,13 +84,13 @@ class LanguageField extends ListField
 		}
 
 		// Get a forced language if it exists.
-//		$forced = $app->getLocalise();
+		$forced = $app->getLocalise();
 
-/*		if (!empty($forced['language']))
+		if (!empty($forced['language']))
 		{
 			$native = $forced['language'];
 		}
-*/
+
 		// If a language is already set in the session, use this instead
 		$model   = new SetupModel;
 		$options = $model->getOptions();
@@ -68,14 +104,14 @@ class LanguageField extends ListField
 		$options = $languageHelper->createLanguageList($native);
 
 		// Fix wrongly set parentheses in RTL languages
-/*		if (JFactory::getLanguage()->isRTL())
+		if ($this->language->isRTL())
 		{
 			foreach ($options as &$option)
 			{
 				$option['text'] = $option['text'] . '&#x200E;';
 			}
 		}
-*/
+
 		if (!$options || $options instanceof Exception)
 		{
 			$options = [];

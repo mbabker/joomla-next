@@ -42,6 +42,13 @@ final class Application extends AbstractWebApplication implements CMSApplication
 	{
 		$this->setContainer($container);
 
+		// Register this to the DI container now
+		$this->getContainer()->protect('Installation\\Application', $this)
+			->alias('Joomla\\CMS\\Application\\CMSApplicationInterface', 'Installation\\Application')
+			->alias('Joomla\\Application\\AbstractWebApplication', 'Installation\\Application')
+			->alias('Joomla\\Application\\AbstractApplication', 'Installation\\Application')
+			->alias('app', 'Installation\\Application');
+
 		parent::__construct();
 
 		$this->registerServices();
@@ -71,13 +78,6 @@ final class Application extends AbstractWebApplication implements CMSApplication
 	 */
 	protected function doExecute()
 	{
-		// Register this to the DI container now
-		$this->getContainer()->protect('Installation\\Application', $this)
-			->alias('Joomla\\CMS\\Application\\CMSApplicationInterface', 'Installation\\Application')
-			->alias('Joomla\\Application\\AbstractWebApplication', 'Installation\\Application')
-			->alias('Joomla\\Application\\AbstractApplication', 'Installation\\Application')
-			->alias('app', 'Installation\\Application');
-
 		$this->initialiseApp();
 
 		try
