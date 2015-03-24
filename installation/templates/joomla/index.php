@@ -21,18 +21,6 @@ $text->script('INSTL_FTP_SETTINGS_CORRECT');
 	<head>
 		<jdoc:include type="meta" />
 		<jdoc:include type="stylesheets" />
-		<!--[if lt IE 9]>
-			<script src="../media/jui/js/html5.js"></script>
-		<![endif]-->
-		<script type="text/javascript">
-			jQuery(function()
-			{	// Delay instantiation after document.formvalidation and other dependencies loaded
-				window.setTimeout(function(){
-					window.Install = new Installation('container-installation', '<?php echo Uri::getInstance()->current(); ?>');
-			   	}, 500);
-
-			});
-		</script>
 	</head>
 	<body>
 		<!-- Header -->
@@ -70,6 +58,18 @@ $text->script('INSTL_FTP_SETTINGS_CORRECT');
 			<hr />
 		</div>
 		<jdoc:include type="scripts" />
+		<!--[if lt IE 9]>
+		<script src="../media/jui/js/html5.js"></script>
+		<![endif]-->
+		<script type="text/javascript">
+			jQuery(document).ready(function()
+			{	// Delay instantiation after document.formvalidation and other dependencies loaded
+				window.setTimeout(function(){
+					window.Install = new Installation('container-installation', '<?php echo Uri::getInstance()->current(); ?>');
+				}, 500);
+
+			});
+		</script>
 		<script>
 			function initElements() {
 				(function ($) {

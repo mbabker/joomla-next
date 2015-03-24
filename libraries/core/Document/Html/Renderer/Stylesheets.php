@@ -16,16 +16,16 @@ use Joomla\Utilities\ArrayHelper;
  *
  * @since  1.0
  */
-class Stylesheet extends AbstractDocumentRenderer
+class Stylesheets extends AbstractDocumentRenderer
 {
 	/**
 	 * {@inheritdoc}
 	 *
 	 * @since  1.0
 	 */
-	public function render($stylesheet, $params = array(), $content = null)
+	public function render($stylesheets, $params = array(), $content = null)
 	{
-		return $this->fetchStylesheet();
+		return $this->fetchStylesheets();
 	}
 
 	/**
@@ -35,7 +35,7 @@ class Stylesheet extends AbstractDocumentRenderer
 	 *
 	 * @since   1.0
 	 */
-	public function fetchStylesheet()
+	public function fetchStylesheets()
 	{
 		// Still broken, return empty string
 		return '';
