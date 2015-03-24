@@ -19,7 +19,8 @@ $text->script('INSTL_FTP_SETTINGS_CORRECT');
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $this->getLanguage(); ?>" lang="<?php echo $this->getLanguage(); ?>" dir="<?php echo $this->getDirection(); ?>">
 	<head>
-		<jdoc:include type="head" />
+		<jdoc:include type="meta" />
+		<jdoc:include type="stylesheets" />
 		<!--[if lt IE 9]>
 			<script src="../media/jui/js/html5.js"></script>
 		<![endif]-->
@@ -68,6 +69,7 @@ $text->script('INSTL_FTP_SETTINGS_CORRECT');
 			</div>
 			<hr />
 		</div>
+		<jdoc:include type="scripts" />
 		<script>
 			function initElements() {
 				(function ($) {
