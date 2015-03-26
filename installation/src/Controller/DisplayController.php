@@ -9,7 +9,11 @@
 namespace Installation\Controller;
 
 use Installation\Model\SetupModel;
+use Joomla\CMS\Renderer\Helper\ScriptHelper;
+use Joomla\CMS\Renderer\Helper\StylesheetHelper;
+use Joomla\CMS\Renderer\Helper\TranslateHelper;
 use Joomla\CMS\Renderer\LayoutRenderer;
+use Joomla\CMS\Renderer\RendererFactory;
 use Joomla\Controller\AbstractController;
 use Joomla\DI\ContainerAwareInterface;
 use Joomla\DI\ContainerAwareTrait;
@@ -138,7 +142,14 @@ class DisplayController extends AbstractController implements ContainerAwareInte
 		// HTML classes need a RendererInterface implementation, create it if need be
 		if ($format == 'Html')
 		{
-			$renderer = new LayoutRenderer($this->getApplication()->getTemplate());
+			// First load up our helpers to the Factory
+			$factory  = (new RendererFactory)
+				->addHelper(new ScriptHelper)
+				->addHelper(new StylesheetHelper)
+				->addHelper(new TranslateHelper);
+
+			// Now load up our renderer
+			$renderer = $factory->getRenderer($this->getApplication()->getTemplate());
 
 			$this->getContainer()->set('Joomla\\CMS\\Renderer\\LayoutRenderer', $renderer)
 				->alias('Joomla\\Renderer\\RendererInterface', 'Joomla\\CMS\\Renderer\\LayoutRenderer');

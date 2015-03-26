@@ -12,7 +12,7 @@
 $form = $displayData['form'];
 
 /** @var \Joomla\Language\Text $text */
-$text = $displayData['text'];
+$text = $displayData['layoutHelpers']['translate']->getTranslator();
 ?>
 <div class="btn-toolbar">
 	<div class="btn-group pull-right">

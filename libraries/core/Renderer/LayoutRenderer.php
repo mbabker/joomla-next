@@ -37,6 +37,14 @@ class LayoutRenderer extends AbstractRenderer
 	protected $debugMessages = [];
 
 	/**
+	 * RendererFactory object
+	 *
+	 * @var    RendererFactory
+	 * @since  1.0
+	 */
+	protected $factory;
+
+	/**
 	 * Full path to actual layout files, after possible template override check
 	 *
 	 * @var    string
@@ -85,7 +93,7 @@ class LayoutRenderer extends AbstractRenderer
 	 *
 	 * @since   1.0
 	 */
-	public function __construct($template, $basePath = null, $options = null)
+	public function __construct($template, $basePath = null, $options = [])
 	{
 		// Initialise / Load options
 		$this->setOptions($options);
@@ -97,6 +105,8 @@ class LayoutRenderer extends AbstractRenderer
 		// Init Enviroment
 		$this->setComponent($this->options->get('component', 'auto'));
 		$this->setClient($this->options->get('client', 'auto'));
+
+		$this->factory = new RendererFactory;
 	}
 
 	/**
@@ -330,6 +340,9 @@ class LayoutRenderer extends AbstractRenderer
 		// Merge the display data
 		$displayData = array_merge($this->data, $data);
 
+		// Add the layout helpers to the data array
+		$displayData['layoutHelpers'] = $this->factory->getHelpers();
+
 		// Check possible overrides, and build the full path to layout file
 		$path = $this->getPath($template);
 
@@ -489,7 +502,7 @@ class LayoutRenderer extends AbstractRenderer
 	 *
 	 * @since   1.0
 	 */
-	public function setOptions($options = null)
+	public function setOptions($options = [])
 	{
 		// Received Registry
 		if ($options instanceof Registry)

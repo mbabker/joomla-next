@@ -31,9 +31,6 @@ class DefaultHtmlView extends BaseHtmlView
 
 		$this->addData('form', $this->model->getForm($layout[1]));
 
-		// TODO - Need a renderer helper for things like accessing the Text object in layouts
-		$this->addData('text', $this->model->getText());
-
 		return parent::render();
 	}
 }
