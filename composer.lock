@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/joomla-framework/application.git",
-                "reference": "79cc280164a447ece9aec33771d747bc3bd5d16e"
+                "reference": "8cac25a153c39ed9dd06e5ef6dde45a01ddd4741"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/joomla-framework/application/zipball/79cc280164a447ece9aec33771d747bc3bd5d16e",
-                "reference": "79cc280164a447ece9aec33771d747bc3bd5d16e",
+                "url": "https://api.github.com/repos/joomla-framework/application/zipball/8cac25a153c39ed9dd06e5ef6dde45a01ddd4741",
+                "reference": "8cac25a153c39ed9dd06e5ef6dde45a01ddd4741",
                 "shasum": ""
             },
             "require": {
@@ -59,7 +59,7 @@
                 "framework",
                 "joomla"
             ],
-            "time": "2015-03-19 03:14:59"
+            "time": "2015-03-24 22:51:59"
         },
         {
             "name": "joomla/compat",
@@ -157,12 +157,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/joomla-framework/database.git",
-                "reference": "575bbde7d250376c8b8655dc64b918f384a0fe32"
+                "reference": "116c555e73e91c2855c938e6bd021d782f9025b9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/joomla-framework/database/zipball/575bbde7d250376c8b8655dc64b918f384a0fe32",
-                "reference": "575bbde7d250376c8b8655dc64b918f384a0fe32",
+                "url": "https://api.github.com/repos/joomla-framework/database/zipball/116c555e73e91c2855c938e6bd021d782f9025b9",
+                "reference": "116c555e73e91c2855c938e6bd021d782f9025b9",
                 "shasum": ""
             },
             "require": {
@@ -203,7 +203,7 @@
                 "framework",
                 "joomla"
             ],
-            "time": "2015-03-19 03:12:39"
+            "time": "2015-03-24 00:23:40"
         },
         {
             "name": "joomla/di",
@@ -492,16 +492,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/joomla-framework/language.git",
-                "reference": "a74372d31779aa2aae717941d5c7676108ef1653"
+                "reference": "3714cd53a0c6c8fca56bda0babdd6d44366ea128"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/joomla-framework/language/zipball/a74372d31779aa2aae717941d5c7676108ef1653",
-                "reference": "a74372d31779aa2aae717941d5c7676108ef1653",
+                "url": "https://api.github.com/repos/joomla-framework/language/zipball/3714cd53a0c6c8fca56bda0babdd6d44366ea128",
+                "reference": "3714cd53a0c6c8fca56bda0babdd6d44366ea128",
                 "shasum": ""
             },
             "require": {
-                "joomla/string": "~1.0",
+                "joomla/string": "~1.3|2.0.*@dev",
                 "php": ">=5.3.10"
             },
             "require-dev": {
@@ -537,7 +537,7 @@
                 "joomla",
                 "language"
             ],
-            "time": "2015-03-19 03:07:24"
+            "time": "2015-03-26 01:12:29"
         },
         {
             "name": "joomla/model",
@@ -793,16 +793,16 @@
         },
         {
             "name": "joomla/string",
-            "version": "1.2.2",
+            "version": "1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/joomla-framework/string.git",
-                "reference": "9f7b27d6b2d48d65b2fe81b5c6d72225629ad692"
+                "reference": "0df8ead8c726a1f648e624d3bcbef8cf05c1d0da"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/joomla-framework/string/zipball/9f7b27d6b2d48d65b2fe81b5c6d72225629ad692",
-                "reference": "9f7b27d6b2d48d65b2fe81b5c6d72225629ad692",
+                "url": "https://api.github.com/repos/joomla-framework/string/zipball/0df8ead8c726a1f648e624d3bcbef8cf05c1d0da",
+                "reference": "0df8ead8c726a1f648e624d3bcbef8cf05c1d0da",
                 "shasum": ""
             },
             "require": {
@@ -836,7 +836,7 @@
                 "joomla",
                 "string"
             ],
-            "time": "2015-03-13 12:29:00"
+            "time": "2015-03-26 01:02:20"
         },
         {
             "name": "joomla/uri",

@@ -10,7 +10,7 @@ use Joomla\CMS\Uri\Uri;
 
 /** @var \Joomla\CMS\Document\HtmlDocument $this */
 
-$text = $this->getContainer()->get('language')->getText();
+$text = $this->getContainer()->get('Joomla\\Language\\LanguageFactory')->getText();
 
 // Load the JavaScript translated messages
 $text->script('INSTL_PROCESS_BUSY');

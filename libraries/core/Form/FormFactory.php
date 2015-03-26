@@ -87,7 +87,7 @@ class FormFactory
 		/*
 		 * Try to inject a Text object into the field
 		 * First, check if the Container has a Text instance registered and prefer it
-		 * Next, check for a Language instance and build the Text object from that
+		 * Next, check for a LanguageFactory instance and build the Text object from that
 		 */
 		$text = null;
 
@@ -95,9 +95,9 @@ class FormFactory
 		{
 			$text = $this->getContainer()->get('Joomla\\Language\\Text');
 		}
-		elseif ($this->getContainer()->exists('Joomla\\Language\\Language'))
+		elseif ($this->getContainer()->exists('Joomla\\Language\\LanguageFactory'))
 		{
-			$text = $this->getContainer()->get('Joomla\\Language\\Language')->getText();
+			$text = $this->getContainer()->get('Joomla\\Language\\LanguageFactory')->getText();
 		}
 
 		if ($text)
@@ -129,7 +129,7 @@ class FormFactory
 		/*
 		 * Try to inject a Text object into the field
 		 * First, check if the Container has a Text instance registered and prefer it
-		 * Next, check for a Language instance and build the Text object from that
+		 * Next, check for a LanguageFactory instance and build the Text object from that
 		 */
 		$text = null;
 
@@ -137,9 +137,9 @@ class FormFactory
 		{
 			$text = $this->getContainer()->get('Joomla\\Language\\Text');
 		}
-		elseif ($this->getContainer()->exists('Joomla\\Language\\Language'))
+		elseif ($this->getContainer()->exists('Joomla\\Language\\LanguageFactory'))
 		{
-			$text = $this->getContainer()->get('Joomla\\Language\\Language')->getText();
+			$text = $this->getContainer()->get('Joomla\\Language\\LanguageFactory')->getText();
 		}
 
 		if ($text)

@@ -18,7 +18,8 @@ use Joomla\CMS\User;
 use Joomla\DI\Container;
 use Joomla\DI\ContainerAwareInterface;
 use Joomla\DI\ContainerAwareTrait;
-use Joomla\Language\Language;
+use Joomla\Language\LanguageFactory;
+use Joomla\Language\Text;
 use Joomla\Registry\Registry;
 use Joomla\Session\Session;
 
@@ -103,7 +104,7 @@ final class Application extends AbstractWebApplication implements CMSApplication
 			if ($document->getType() == 'html')
 			{
 				// Set metadata
-				$document->setTitle($lang->getText()->translate('INSTL_PAGE_TITLE'));
+				$document->setTitle((new Text($lang))->translate('INSTL_PAGE_TITLE'));
 			}
 
 			$controller = $this->fetchController($this->input->getCmd('task', 'display'));
@@ -331,10 +332,15 @@ final class Application extends AbstractWebApplication implements CMSApplication
 		$this->set('sampledata', $forced['sampledata']);
 		$this->set('helpurl', $options['helpurl']);
 
-		// Instantiate our Langauge instance
-		$this->setLanguage(Language::getInstance($this->get('language.code'), JPATH_INSTALLATION, $this->get('language.debug')));
+		// Instantiate our Langauge instance and set the language services up
+		$languageFactory = (new LanguageFactory)
+			->setDefaultLanguage($this->get('language.code'))
+			->setLanguageDirectory(JPATH_INSTALLATION);
+
+		$this->setLanguage($languageFactory->getLanguage(null, null, $this->get('language.debug')));
 		$this->getContainer()->share('Joomla\\Language\\Language', $this->getLanguage())
-			->alias('language', 'Joomla\\Language\\Language');
+			->alias('language', 'Joomla\\Language\\Language')
+			->share('Joomla\\Language\\LanguageFactory', $languageFactory);
 	}
 
 	/**

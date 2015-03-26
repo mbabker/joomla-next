@@ -63,11 +63,14 @@ class DisplayController extends AbstractController implements ContainerAwareInte
 			$this->getInput()->set('view', $this->defaultView);
 		}
 
+		/** @var \Joomla\Language\LanguageFactory $langFactory */
+		$langFactory = $this->getContainer()->get('Joomla\\Language\\LanguageFactory');
+
 		switch ($vName)
 		{
 			case 'preinstall':
 				$model = new SetupModel;
-				$model->setText($app->getLanguage()->getText());
+				$model->setText($langFactory->getText());
 
 				$sufficient   = $model->getPhpOptionsSufficient();
 				$checkOptions = false;
@@ -89,7 +92,7 @@ class DisplayController extends AbstractController implements ContainerAwareInte
 
 			default:
 				$model = new SetupModel;
-				$model->setText($app->getLanguage()->getText());
+				$model->setText($langFactory->getText());
 
 				$sufficient   = $model->getPhpOptionsSufficient();
 				$checkOptions = true;
