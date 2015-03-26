@@ -36,12 +36,60 @@ class HtmlDocument extends AbstractDocument
 	private $caching = 0;
 
 	/**
+	 * Array of custom tags
+	 *
+	 * @var    array
+	 * @since  1.0
+	 */
+	private $customTags = [];
+
+	/**
+	 * Set to true when the document should be output as HTML5
+	 *
+	 * @var    boolean
+	 * @since  1.0
+	 */
+	private $html5 = true;
+
+	/**
 	 * Array of template parameters
 	 *
 	 * @var    array
 	 * @since  1.0
 	 */
 	private $params = null;
+
+	/**
+	 * Array of scripts placed in the header
+	 *
+	 * @var    array
+	 * @since  1.0
+	 */
+	private $scriptDeclarations = [];
+
+	/**
+	 * Array of linked scripts
+	 *
+	 * @var    array
+	 * @since  1.0
+	 */
+	private $scripts = [];
+
+	/**
+	 * Array of included style declarations
+	 *
+	 * @var    array
+	 * @since  1.0
+	 */
+	private $styleDeclarations = [];
+
+	/**
+	 * Array of linked style sheets
+	 *
+	 * @var    array
+	 * @since  1.0
+	 */
+	private $styleSheets = [];
 
 	/**
 	 * String holding parsed template
@@ -79,6 +127,112 @@ class HtmlDocument extends AbstractDocument
 
 		// Set default mime type and document metadata (meta data syncs with mime type by default)
 		$this->setMimeEncoding('text/html');
+	}
+
+	/**
+	 * Adds a custom HTML string to the head block
+	 *
+	 * @param   string  $html  The HTML to add to the head
+	 *
+	 * @return  $this
+	 *
+	 * @since   1.0
+	 */
+	public function addCustomTag($html)
+	{
+		$this->customTags[] = trim($html);
+
+		return $this;
+	}
+
+	/**
+	 * Adds a linked script to the page
+	 *
+	 * @param   string   $url    URL to the linked script
+	 * @param   string   $type   Type of script. Defaults to 'text/javascript'
+	 * @param   boolean  $defer  Adds the defer attribute.
+	 * @param   boolean  $async  Adds the async attribute.
+	 *
+	 * @return  $this
+	 *
+	 * @since   1.0
+	 */
+	public function addScript($url, $type = 'text/javascript', $defer = false, $async = false)
+	{
+		$this->scripts[$url]['mime'] = $type;
+		$this->scripts[$url]['defer'] = $defer;
+		$this->scripts[$url]['async'] = $async;
+
+		return $this;
+	}
+
+	/**
+	 * Adds a script to the page
+	 *
+	 * @param   string  $content  Script
+	 * @param   string  $type     Scripting mime (defaults to 'text/javascript')
+	 *
+	 * @return  $this
+	 *
+	 * @since   1.0
+	 */
+	public function addScriptDeclaration($content, $type = 'text/javascript')
+	{
+		if (!isset($this->scriptDeclarations[strtolower($type)]))
+		{
+			$this->scriptDeclarations[strtolower($type)] = $content;
+		}
+		else
+		{
+			$this->scriptDeclarations[strtolower($type)] .= chr(13) . $content;
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Adds a stylesheet declaration to the page
+	 *
+	 * @param   string  $content  Style declarations
+	 * @param   string  $type     Type of stylesheet (defaults to 'text/css')
+	 *
+	 * @return  $this
+	 *
+	 * @since   1.0
+	 */
+	public function addStyleDeclaration($content, $type = 'text/css')
+	{
+		if (!isset($this->styleDeclarations[strtolower($type)]))
+		{
+			$this->styleDeclarations[strtolower($type)] = $content;
+		}
+		else
+		{
+			$this->styleDeclarations[strtolower($type)] .= chr(13) . $content;
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Adds a linked stylesheet to the page
+	 *
+	 * @param   string  $url      URL to the linked style sheet
+	 * @param   string  $type     Mime encoding type
+	 * @param   string  $media    Media type that this stylesheet applies to
+	 * @param   array   $attribs  Array of attributes
+	 *
+	 * @return  $this
+	 *
+	 * @since   1.0
+	 */
+	public function addStylesheet($url, $type = 'text/css', $media = null, $attribs = array())
+	{
+		$this->styleSheets[$url]['mime'] = $type;
+		$this->styleSheets[$url]['media'] = $media;
+		$this->styleSheets[$url]['attribs'] = $attribs;
+
+		return $this;
 	}
 
 	/**
@@ -186,6 +340,78 @@ class HtmlDocument extends AbstractDocument
 		}
 
 		return $this->buffer[$type][$name][$title];
+	}
+
+	/**
+	 * Return the added custom tags.
+	 *
+	 * @return  array
+	 *
+	 * @since   1.0
+	 */
+	public function getCustomTags()
+	{
+		return $this->customTags;
+	}
+
+	/**
+	 * Returns whether the document is set up to be output as HTML5
+	 *
+	 * @return  boolean
+	 *
+	 * @since   1.0
+	 */
+	public function getHtml5()
+	{
+		return $this->html5;
+	}
+
+	/**
+	 * Return the added script declarations.
+	 *
+	 * @return  string
+	 *
+	 * @since   1.0
+	 */
+	public function getScriptDeclarations()
+	{
+		return $this->scriptDeclarations;
+	}
+
+	/**
+	 * Return the added scripts.
+	 *
+	 * @return  string
+	 *
+	 * @since   1.0
+	 */
+	public function getScripts()
+	{
+		return $this->scripts;
+	}
+
+	/**
+	 * Return the added style declarations.
+	 *
+	 * @return  string
+	 *
+	 * @since   1.0
+	 */
+	public function getStyleDeclarations()
+	{
+		return $this->styleDeclarations;
+	}
+
+	/**
+	 * Return the added stylesheets.
+	 *
+	 * @return  string
+	 *
+	 * @since   1.0
+	 */
+	public function getStylesheets()
+	{
+		return $this->styleSheets;
 	}
 
 	/**
@@ -385,6 +611,22 @@ class HtmlDocument extends AbstractDocument
 		$title = isset($options['title']) ? $options['title'] : null;
 
 		$this->buffer[$type][$name][$title] = $content;
+
+		return $this;
+	}
+
+	/**
+	 * Sets whether the document should be output as HTML5
+	 *
+	 * @param   boolean  $state  True when HTML5 should be output
+	 *
+	 * @return  $this
+	 *
+	 * @since   12.1
+	 */
+	public function setHtml5($state)
+	{
+		$this->html5 = $state;
 
 		return $this;
 	}

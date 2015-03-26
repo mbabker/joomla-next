@@ -30,6 +30,7 @@ class DefaultHtmlView extends BaseHtmlView
 		$layout = explode('.', $this->getLayout());
 
 		$this->addData('form', $this->model->getForm($layout[1]));
+		$this->addData('currentView', $layout[1]);
 
 		return parent::render();
 	}

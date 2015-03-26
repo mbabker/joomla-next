@@ -25,21 +25,6 @@ class Stylesheets extends AbstractDocumentRenderer
 	 */
 	public function render($stylesheets, $params = array(), $content = null)
 	{
-		return $this->fetchStylesheets();
-	}
-
-	/**
-	 * Generates the stylesheets tags and inline styles and return the results as a string
-	 *
-	 * @return  string  The head hTML
-	 *
-	 * @since   1.0
-	 */
-	public function fetchStylesheets()
-	{
-		// Still broken, return empty string
-		return '';
-
 		$document = $this->doc;
 
 		// Get line endings
@@ -47,11 +32,11 @@ class Stylesheets extends AbstractDocumentRenderer
 		$buffer = '';
 
 		// Generate stylesheet links
-		foreach ($document->_styleSheets as $strSrc => $strAttr)
+		foreach ($document->getStylesheets() as $strSrc => $strAttr)
 		{
 			$buffer .= "\t" . '<link rel="stylesheet" href="' . $strSrc . '"';
 
-			if (!is_null($strAttr['mime']) && (!$document->isHtml5() || $strAttr['mime'] != 'text/css'))
+			if (!is_null($strAttr['mime']) && (!$document->getHtml5() || $strAttr['mime'] != 'text/css'))
 			{
 				$buffer .= ' type="' . $strAttr['mime'] . '"';
 			}
@@ -70,7 +55,7 @@ class Stylesheets extends AbstractDocumentRenderer
 		}
 
 		// Generate stylesheet declarations
-		foreach ($document->_style as $type => $content)
+		foreach ($document->getStyleDeclarations() as $type => $content)
 		{
 			$buffer .= "\t" . '<style type="' . $type . '">' . "\n";
 

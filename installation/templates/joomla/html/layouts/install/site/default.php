@@ -11,8 +11,14 @@
 /** @var \Joomla\Form\Form $form */
 $form = $displayData['form'];
 
+/** @var \Joomla\CMS\Renderer\LayoutRenderer $renderer */
+$renderer = $displayData['renderer'];
+
 /** @var \Joomla\Language\Text $text */
 $text = $displayData['layoutHelpers']['translate']->getTranslator();
+
+// Render the step bar
+echo $renderer->render('install.template.stepbar', ['currentView' => $displayData['currentView']]);
 ?>
 <div class="btn-toolbar">
 	<div class="btn-group pull-right">

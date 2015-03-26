@@ -34,12 +34,10 @@ class Meta extends AbstractDocumentRenderer
 	 * @return  string  The head hTML
 	 *
 	 * @since   1.0
+	 * @todo    Finish implementation
 	 */
 	public function fetchMeta()
 	{
-		// Still broken, return empty string
-		return '';
-
 		$document = $this->doc;
 
 		// Get line endings
@@ -47,13 +45,13 @@ class Meta extends AbstractDocumentRenderer
 		$buffer = '';
 
 		// Generate charset when using HTML5 (should happen first)
-		if ($document->isHtml5())
+		if ($document->getHtml5())
 		{
 			$buffer .= "\t" . '<meta charset="' . $document->getCharacterSet() . '" />' . "\n";
 		}
 
 		// Generate base tag (need to happen early)
-		$base = $document->getBase();
+/*		$base = $document->getBase();
 
 		if (!empty($base))
 		{
@@ -91,9 +89,9 @@ class Meta extends AbstractDocumentRenderer
 		{
 			$buffer .= "\t" . '<meta name="generator" content="' . htmlspecialchars($generator) . '" />' . "\n";
 		}
-
+*/
 		$buffer .= "\t" . '<title>' . htmlspecialchars($document->getTitle(), ENT_COMPAT, 'UTF-8') . '</title>' . "\n";
-
+/*
 		// Generate link declarations
 		foreach ($document->_links as $link => $linkAtrr)
 		{
@@ -106,7 +104,7 @@ class Meta extends AbstractDocumentRenderer
 
 			$buffer .= ' />' . "\n";
 		}
-
+*/
 		return $buffer;
 	}
 }

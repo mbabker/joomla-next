@@ -10,6 +10,12 @@ use Joomla\CMS\Uri\Uri;
 
 /** @var \Joomla\CMS\Document\HtmlDocument $this */
 
+// Add stylesheets
+$this->addStylesheet('templates/joomla/css/template.css');
+
+// Add JavaScript
+$this->addScript('templates/joomla/js/installation.js');
+
 $text = $this->getContainer()->get('Joomla\\Language\\LanguageFactory')->getText();
 
 // Load the JavaScript translated messages

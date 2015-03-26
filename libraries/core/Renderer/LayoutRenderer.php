@@ -343,6 +343,9 @@ class LayoutRenderer extends AbstractRenderer
 		// Add the layout helpers to the data array
 		$displayData['layoutHelpers'] = $this->factory->getHelpers();
 
+		// Add this renderer to the data array
+		$displayData['renderer'] = $this;
+
 		// Check possible overrides, and build the full path to layout file
 		$path = $this->getPath($template);
 

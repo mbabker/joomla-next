@@ -25,21 +25,6 @@ class Scripts extends AbstractDocumentRenderer
 	 */
 	public function render($scripts, $params = array(), $content = null)
 	{
-		return $this->fetchScripts();
-	}
-
-	/**
-	 * Generates the script tags/links and return the results as a string
-	 *
-	 * @return  string  The head hTML
-	 *
-	 * @since   1.0
-	 */
-	public function fetchScripts()
-	{
-		// Still broken, return empty string
-		return '';
-
 		$document = $this->doc;
 
 		// Get line endings
@@ -47,14 +32,14 @@ class Scripts extends AbstractDocumentRenderer
 		$buffer = '';
 
 		// Generate script file links
-		foreach ($document->_scripts as $strSrc => $strAttr)
+		foreach ($document->getScripts() as $strSrc => $strAttr)
 		{
 			$buffer .= "\t" . '<script src="' . $strSrc . '"';
 			$defaultMimes = array(
 				'text/javascript', 'application/javascript', 'text/x-javascript', 'application/x-javascript'
 			);
 
-			if (!is_null($strAttr['mime']) && (!$document->isHtml5() || !in_array($strAttr['mime'], $defaultMimes)))
+			if (!is_null($strAttr['mime']) && (!$document->getHtml5() || !in_array($strAttr['mime'], $defaultMimes)))
 			{
 				$buffer .= ' type="' . $strAttr['mime'] . '"';
 			}
@@ -73,7 +58,7 @@ class Scripts extends AbstractDocumentRenderer
 		}
 
 		// Generate script declarations
-		foreach ($document->_script as $type => $content)
+		foreach ($document->getScriptDeclarations() as $type => $content)
 		{
 			$buffer .= "\t" . '<script type="' . $type . '">' . "\n";
 
@@ -95,7 +80,7 @@ class Scripts extends AbstractDocumentRenderer
 		}
 
 		// Generate script language declarations.
-		$text = $this->doc->getApplication()->getLanguage()->getText();
+		$text = $this->doc->getContainer()->get('Joomla\\Language\\LanguageFactory')->getText();
 
 		if (count($text->script()))
 		{
@@ -118,7 +103,7 @@ class Scripts extends AbstractDocumentRenderer
 			$buffer .= "\t" . '</script>' . "\n";
 		}
 
-		foreach ($document->_custom as $custom)
+		foreach ($document->getCustomTags() as $custom)
 		{
 			$buffer .= "\t" . $custom . "\n";
 		}
