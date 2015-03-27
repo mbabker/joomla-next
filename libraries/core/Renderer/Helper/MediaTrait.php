@@ -50,7 +50,7 @@ trait MediaTrait
 		/** @var \Joomla\CMS\Application\CMSApplicationInterface $app */
 		$app     = $this->container->get('app');
 		$baseUri = (new Uri)->base(true);
-		$baseUri = (new Uri)->root(true);
+		$rootUri = (new Uri)->root(true);
 
 		// Detect browser and compute potential files
 		if ($detect_browser)
