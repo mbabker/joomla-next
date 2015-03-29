@@ -9,6 +9,7 @@
 namespace Installation\Controller;
 
 use Installation\Model\SetupModel;
+use Joomla\CMS\Renderer\Helper\BootstrapHelper;
 use Joomla\CMS\Renderer\Helper\ScriptHelper;
 use Joomla\CMS\Renderer\Helper\StylesheetHelper;
 use Joomla\CMS\Renderer\Helper\TranslateHelper;
@@ -144,6 +145,7 @@ class DisplayController extends AbstractController implements ContainerAwareInte
 		{
 			// First load up our helpers to the Factory
 			$factory  = (new RendererFactory)
+				->addHelper(new BootstrapHelper)
 				->addHelper(new ScriptHelper)
 				->addHelper(new StylesheetHelper)
 				->addHelper(new TranslateHelper);
@@ -162,12 +164,18 @@ class DisplayController extends AbstractController implements ContainerAwareInte
 		{
 			$class = 'Installation\\View\\Default' . $format . 'View';
 
-			// If we still have nothing, abort mission
+			// If we still have nothing, let's try the Framework and its base classes
 			if (!class_exists($class))
 			{
-				throw new \RuntimeException(
-					$this->getApplication()->getLanguage()->getText()->sprintf('INSTL_VIEW_NOT_FOUND', $view, $format)
-				);
+				$class = 'Joomla\\View\\Base' . $format . 'View';
+
+				// Last chance, we did our best
+				if (!class_exists($class))
+				{
+					throw new \RuntimeException(
+						$this->getApplication()->getLanguage()->getText()->sprintf('INSTL_VIEW_NOT_FOUND', $view, $format)
+					);
+				}
 			}
 		}
 

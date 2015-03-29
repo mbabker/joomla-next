@@ -6,7 +6,7 @@
  */
 
 var Installation = function(_container, _base) {
-    var $, container, busy, spinner, baseUrl, view;
+    var $, container, busy, baseUrl, view;
 
     /**
      * Initializes JavaScript events on each request, required for AJAX
@@ -31,7 +31,6 @@ var Installation = function(_container, _base) {
             return false;
         }
 
-        spinner.show(true);
         busy = true;
         Joomla.removeMessages();
         var data = 'format: json&' + $form.serialize();
@@ -53,7 +52,6 @@ var Installation = function(_container, _base) {
                 window.location = baseUrl + '?view=' + r.data.view;
             }
         }).fail(function(xhr) {
-            spinner.hide(true);
             busy = false;
             try {
                 var r = $.parseJSON(xhr.responseText);
@@ -79,7 +77,6 @@ var Installation = function(_container, _base) {
             return false;
         }
 
-        spinner.show(true);
         busy = true;
         Joomla.removeMessages();
         var data = 'format: json&' + $form.serialize();
@@ -101,7 +98,6 @@ var Installation = function(_container, _base) {
                 window.location = baseUrl + '?view=' + r.data.view;
             }
         }).fail(function(xhr) {
-            spinner.hide(true);
             busy = false;
             try {
                 var r = $.parseJSON(xhr.responseText);
@@ -125,7 +121,6 @@ var Installation = function(_container, _base) {
     var goToPage = function(page, fromSubmit) {
         if (!fromSubmit) {
             Joomla.removeMessages();
-            spinner.show(true);
         }
 
         $.ajax({
@@ -139,7 +134,6 @@ var Installation = function(_container, _base) {
             // Attach JS behaviors to the newly loaded HTML
             pageInit();
 
-            spinner.hide(true);
             busy = false;
 
             initElements();
@@ -352,7 +346,6 @@ var Installation = function(_container, _base) {
         $ = jQuery.noConflict();
         busy = false;
         container = _container;
-        spinner = new Spinner(container);
         baseUrl = _base;
         view = '';
 

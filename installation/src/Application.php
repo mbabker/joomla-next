@@ -63,12 +63,16 @@ final class Application extends AbstractWebApplication implements CMSApplication
 
 		// Set the base URI
 		$baseUri = (array) $this->get('uri.base');
+		$parts = explode('/', $baseUri['full']);
+		array_pop($parts);
+		$baseUri['full'] = implode('/', $parts);
 		$uri->setBase($baseUri);
 
 		// Now set the root URI
 		$parts = explode('/', $baseUri['full']);
 		array_pop($parts);
-		$baseUri['full'] = implode('/', $parts);
+		$baseUri['full'] = rtrim(implode('/', $parts), '/');
+		$baseUri['path'] = rtrim(str_replace('/installation', '', $baseUri['path']), '/');
 		$uri->setRoot($baseUri);
 	}
 

@@ -51,7 +51,7 @@ class ScriptHelper implements RendererHelperInterface
 	 *
 	 * @since   1.0
 	 */
-	public function addStylesheet($file, $relative = false, $path_only = false, $detect_browser = true, $detect_debug = true)
+	public function addScript($file, $relative = false, $path_only = false, $detect_browser = true, $detect_debug = true)
 	{
 		// Fetch the document
 		/** @var \Joomla\CMS\Document\DocumentInterface $document */

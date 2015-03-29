@@ -7,6 +7,7 @@
  */
 
 namespace Joomla\CMS\Renderer\Helper;
+
 use Joomla\CMS\Uri\Uri;
 use Joomla\Filesystem\File;
 
@@ -17,6 +18,14 @@ use Joomla\Filesystem\File;
  */
 trait MediaTrait
 {
+	/**
+	 * Array containing information for loaded files
+	 *
+	 * @var    array
+	 * @since  1.0
+	 */
+	protected static $loaded = [];
+
 	/**
 	 * Compute the files to be included
 	 *

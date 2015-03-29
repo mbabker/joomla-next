@@ -6,14 +6,23 @@
  * @license    http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License Version 2 or Later
  */
 
+use Joomla\CMS\Renderer\RendererFactory;
 use Joomla\CMS\Uri\Uri;
 
 /** @var \Joomla\CMS\Document\HtmlDocument $this */
 
+// Fetch the renderer helpers
+$helpers = (new RendererFactory)->getHelpers();
+
+/** @var \Joomla\CMS\Renderer\Helper\BootstrapHelper $bootstrapHelper */
+$bootstrapHelper = $helpers['bootstrap'];
+
 // Add stylesheets
+$bootstrapHelper->loadCss(true, $this->getDirection());
 $this->addStylesheet('templates/joomla/css/template.css');
 
 // Add JavaScript
+$bootstrapHelper->loadBootstrap();
 $this->addScript('templates/joomla/js/installation.js');
 
 $text = $this->getContainer()->get('Joomla\\Language\\LanguageFactory')->getText();
@@ -68,24 +77,17 @@ $text->script('INSTL_FTP_SETTINGS_CORRECT');
 		<script src="../media/jui/js/html5.js"></script>
 		<![endif]-->
 		<script type="text/javascript">
-			jQuery(document).ready(function()
-			{	// Delay instantiation after document.formvalidation and other dependencies loaded
-				window.setTimeout(function(){
+			// Delay instantiation after document.formvalidation and other dependencies loaded
+			jQuery(document).ready(function () {
+				window.setTimeout(function () {
 					window.Install = new Installation('container-installation', '<?php echo Uri::getInstance()->current(); ?>');
 				}, 500);
 
 			});
-		</script>
-		<script>
+
 			function initElements() {
 				(function ($) {
 					$('.hasTooltip').tooltip()
-
-					// Chosen select boxes
-					$('select').chosen({
-						disable_search_threshold: 10,
-						allow_single_deselect: true
-					});
 
 					// Turn radios into btn-group
 					$('.radio.btn-group label').addClass('btn');
