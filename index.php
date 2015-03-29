@@ -119,9 +119,8 @@ try
 		Joomla\CMS\Profiler\ProfilerFactory::getProfiler('application')->mark('beforeApplicationLaunch');
 	}
 
-	$application = new Joomla\CMS\Application\SiteApplication(new Joomla\Input\Input, $config);
-	$application->setContainer($container);
-	$application->execute();
+	(new Joomla\CMS\Application\SiteApplication($container, new Joomla\Input\Input, $config))
+		->execute();
 
 	if (JDEBUG)
 	{

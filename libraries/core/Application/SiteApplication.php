@@ -9,6 +9,8 @@
 namespace Joomla\CMS\Application;
 
 use Joomla\CMS\Profiler\ProfilerFactory;
+use Joomla\CMS\User;
+use Joomla\Session\Session;
 
 /**
  * CMS site application class.
@@ -32,5 +34,45 @@ final class SiteApplication extends AbstractCMSWebApplication
 		{
 			ProfilerFactory::getProfiler('application')->mark('afterExecute');
 		}
+	}
+
+	/**
+	 * {@inheritdoc}
+	 *
+	 * @since  1.0
+	 */
+	public function getName()
+	{
+		return 'site';
+	}
+
+	/**
+	 * {@inheritdoc}
+	 *
+	 * @since  1.0
+	 */
+	public function initialiseApp($options = [])
+	{
+		// TODO: Implement initialiseApp() method.
+	}
+
+	/**
+	 * {@inheritdoc}
+	 *
+	 * @since  1.0
+	 */
+	public function loadIdentity(User $user = null)
+	{
+		// TODO: Implement loadIdentity() method.
+	}
+
+	/**
+	 * {@inheritdoc}
+	 *
+	 * @since  1.0
+	 */
+	public function loadSession(Session $session = null)
+	{
+		// TODO: Implement loadSession() method.
 	}
 }
