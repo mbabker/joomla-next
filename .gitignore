@@ -33,3 +33,7 @@ Desktop.ini
 
 # Composer
 /libraries/vendor
+
+# Bower
+/media/bower_components
+
